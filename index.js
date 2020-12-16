@@ -85,7 +85,6 @@ router.get("/images/", (req, res) => {
   let images_urls = images_array.map((value) => {
     return "localhost:8080/images/" + value;
   });
-  console.log(images_urls);
   res.status(200).json({ images_urls, images_array });
 });
 
