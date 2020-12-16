@@ -6,8 +6,24 @@ const multer = require("multer");
 const fs = require("fs");
 const app = express();
 const router = express.Router();
+app.use(express.json());
 
 const port = process.env.PORT || 8080;
+
+// Defining CORS
+app.use(function (req, res, next) {
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
 
 // uploading using multer
 const upload = multer({
@@ -104,10 +120,16 @@ app.use("/", router);
 
 app.use((err, req, res, next) => {
   if (err.code == "ENOENT") {
-    res.status(404).json({ message: "Image Not Found !" });
+    res.status(404).json({ message: "Image Not Found!" });
   } else {
     res.status(500).json({ message: err.message });
   }
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    Message: "Congrats the servers up, look at images on the /images endpoint."
+  });
 });
 
 app.listen(port);
