@@ -69,6 +69,13 @@ router.get("/images/:imagename", (req, res) => {
   let image = fs.readFileSync(imagepath);
   res.end(image, "binary");
 });
+// get by image filename in the compressed_images folder
+router.get("/compressed_images/:imagename", (req, res) => {
+  let imagename = req.params.imagename;
+  let imagepath = __dirname + "/compressed_images/" + imagename;
+  let image = fs.readFileSync(imagepath);
+  res.end(image, "binary");
+});
 
 // gets all images names through the images directory
 router.get("/images/", (req, res) => {
@@ -81,6 +88,18 @@ router.get("/images/", (req, res) => {
   console.log(images_urls);
   res.status(200).json({ images_urls, images_array });
 });
+
+// gets all compressed images names through the compressed_images directory
+router.get("/compressed_images/", (req, res) => {
+  let imagepath = __dirname + "/compressed_images/";
+  let images_array = fs.readdirSync(imagepath);
+
+  let images_urls = images_array.map((value) => {
+    return "localhost:8080/compressed_images/" + value;
+  });
+  res.status(200).json({ images_urls, images_array });
+});
+
 app.use("/", router);
 
 app.use((err, req, res, next) => {
