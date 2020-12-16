@@ -1,4 +1,5 @@
 "use strict";
+require("dotenv/config");
 
 const express = require("express");
 const multer = require("multer");
@@ -83,7 +84,7 @@ router.get("/images/", (req, res) => {
   let images_array = fs.readdirSync(imagepath);
 
   let images_urls = images_array.map((value) => {
-    return "localhost:8080/images/" + value;
+    return `${process.env.URL}images/${value}`;
   });
   res.status(200).json({ images_urls, images_array });
 });
@@ -94,7 +95,7 @@ router.get("/compressed_images/", (req, res) => {
   let images_array = fs.readdirSync(imagepath);
 
   let images_urls = images_array.map((value) => {
-    return "localhost:8080/compressed_images/" + value;
+    return `${process.env.URL}compressed_images/${value}`;
   });
   res.status(200).json({ images_urls, images_array });
 });
