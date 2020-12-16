@@ -20,6 +20,17 @@ const upload = multer({
     callback(null, true);
   }
 }).single("image");
+const compressed_upload = multer({
+  dest: "compressed_images/",
+  limits: { fileSize: 10000000, files: 1 },
+  fileFilter: (req, file, callback) => {
+    // file type check
+    if (!file.originalname.match(/\.(jpg|jpeg|JPG)$/)) {
+      return callback(new Error("Only jpg, jpeg, JPG allowed!"), false);
+    }
+    callback(null, true);
+  }
+}).single("image");
 
 // Upload images using this endpoint
 router.post("/images/upload", (req, res) => {
@@ -30,6 +41,20 @@ router.post("/images/upload", (req, res) => {
       res.status(400).json({ message: err.message });
     } else {
       let path = `/images/${curr_img}`;
+      res
+        .status(200)
+        .json({ message: "Image Uploaded Successfully!", path: path });
+    }
+  });
+});
+router.post("/compressed_images/upload", (req, res) => {
+  compressed_upload(req, res, function (err) {
+    // stored as filename
+    const curr_img = req.file.filename;
+    if (err) {
+      res.status(400).json({ message: err.message });
+    } else {
+      let path = `/compressed_images/${curr_img}`;
       res
         .status(200)
         .json({ message: "Image Uploaded Successfully!", path: path });
