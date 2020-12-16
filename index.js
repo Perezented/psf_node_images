@@ -45,6 +45,17 @@ router.get("/images/:imagename", (req, res) => {
   res.end(image, "binary");
 });
 
+// gets all images names through the images directory
+router.get("/images/", (req, res) => {
+  let imagepath = __dirname + "/images/";
+  let images_array = fs.readdirSync(imagepath);
+
+  let images_urls = images_array.map((value) => {
+    return "localhost:8080/images/" + value;
+  });
+  console.log(images_urls);
+  res.status(200).json({ images_urls, images_array });
+});
 app.use("/", router);
 
 app.use((err, req, res, next) => {
