@@ -6,7 +6,7 @@ module.exports = {
     client: "pg",
     connection: {
       host: "localhost",
-      database: "psfserver",
+      database: "psf",
       user: "postgres",
       password: process.env.PASSWORD
     },
@@ -21,7 +21,7 @@ module.exports = {
     client: "pg",
     connection: {
       host: "localhost",
-      database: "psfserver",
+      database: "psf",
       user: "postgres",
       password: process.env.PASSWORD
     },
