@@ -4,11 +4,25 @@ require("dotenv/config");
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
+
+const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
+const FileType = require("file-type");
+
 const app = express();
-const router = express.Router();
 app.use(express.json());
 
+const router = express.Router();
+
 const port = process.env.PORT || 8080;
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+
+app.use(fileUpload());
 
 // Defining CORS
 app.use(function (req, res, next) {
@@ -98,7 +112,6 @@ router.get("/compressed_images/:imagename", (req, res) => {
 router.get("/images/", (req, res) => {
   let imagepath = __dirname + "/images/";
   let images_array = fs.readdirSync(imagepath);
-
   let images_urls = images_array.map((value) => {
     return `${process.env.URL}images/${value}`;
   });
@@ -109,7 +122,6 @@ router.get("/images/", (req, res) => {
 router.get("/compressed_images/", (req, res) => {
   let imagepath = __dirname + "/compressed_images/";
   let images_array = fs.readdirSync(imagepath);
-
   let images_urls = images_array.map((value) => {
     return `${process.env.URL}compressed_images/${value}`;
   });
