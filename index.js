@@ -6,8 +6,6 @@ const multer = require("multer");
 const fs = require("fs");
 
 const bodyParser = require("body-parser");
-const fileUpload = require("express-fileupload");
-const FileType = require("file-type");
 
 const app = express();
 app.use(express.json());
@@ -21,8 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-
-app.use(fileUpload());
 
 // Defining CORS
 app.use(function (req, res, next) {
