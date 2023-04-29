@@ -115,7 +115,7 @@ router.get("/images/", (req, res) => {
   let imagepath = __dirname + "/images/";
   let images_array = fs.readdirSync(imagepath);
   let images_urls = images_array.map((value) => {
-    return `${process.env.URL}images/${value}`;
+    return `${process.env.URL.slice(-1).endsWith('/') ? process.env.URL : process.env.URL + "/"}images/${value}`;
   });
   res.status(200).json({ images_urls, images_array });
 });
@@ -125,7 +125,7 @@ router.get("/compressed_images/", (req, res) => {
   let imagepath = __dirname + "/compressed_images/";
   let images_array = fs.readdirSync(imagepath);
   let images_urls = images_array.map((value) => {
-    return `${process.env.URL}compressed_images/${value}`;
+    return `${process.env.URL.slice(-1).endsWith('/') ? process.env.URL : process.env.URL + "/"}compressed_images/${value}`;
   });
   res.status(200).json({ images_urls, images_array });
 });
