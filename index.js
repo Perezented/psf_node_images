@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Defining CORS
-app.use(function (req, res, next) {
+app.use((_req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Headers",
     "X-Requested-With,content-type"
@@ -73,7 +73,7 @@ const compressed_upload = multer({
 //     if (err) {
 //       res.status(400).json({ message: err.message });
 //     } else {
-//       let path = `/images/${curr_img}`;
+//       const path = `/images/${curr_img}`;
 //       res
 //         .status(200)
 //         .json({ message: "Image Uploaded Successfully!", path: path });
@@ -87,7 +87,7 @@ const compressed_upload = multer({
 //     if (err) {
 //       res.status(400).json({ message: err.message });
 //     } else {
-//       let path = `/compressed_images/${curr_img}`;
+//       const path = `/compressed_images/${curr_img}`;
 //       res
 //         .status(200)
 //         .json({ message: "Image Uploaded Successfully!", path: path });
@@ -97,34 +97,34 @@ const compressed_upload = multer({
 
 // get by image filename in the images folder
 router.get("/images/:imagename", (req, res) => {
-  let imagename = req.params.imagename;
-  let imagepath = __dirname + "/images/" + imagename;
-  let image = fs.readFileSync(imagepath);
+  const imagename = req.params.imagename;
+  const imagepath = `${__dirname}/images/${imagename}`;
+  const image = fs.readFileSync(imagepath);
   res.end(image, "binary");
 });
 // get by image filename in the compressed_images folder
 router.get("/compressed_images/:imagename", (req, res) => {
-  let imagename = req.params.imagename;
-  let imagepath = __dirname + "/compressed_images/" + imagename;
-  let image = fs.readFileSync(imagepath);
+  const imagename = req.params.imagename;
+  const imagepath = `${__dirname}/compressed_images/${imagename}`;
+  const image = fs.readFileSync(imagepath);
   res.end(image, "binary");
 });
 
 // gets all images names through the images directory
-router.get("/images/", (req, res) => {
-  let imagepath = __dirname + "/images/";
-  let images_array = fs.readdirSync(imagepath);
-  let images_urls = images_array.map((value) => {
+router.get("/images/", (_req, res) => {
+  const imagepath = `${__dirname}/images/`;
+  const images_array = fs.readdirSync(imagepath);
+  const images_urls = images_array.map((value) => {
     return `${process.env.URL.slice(-1).endsWith('/') ? process.env.URL : process.env.URL + "/"}images/${value}`;
   });
   res.status(200).json({ images_urls, images_array });
 });
 
 // gets all compressed images names through the compressed_images directory
-router.get("/compressed_images/", (req, res) => {
-  let imagepath = __dirname + "/compressed_images/";
-  let images_array = fs.readdirSync(imagepath);
-  let images_urls = images_array.map((value) => {
+router.get("/compressed_images/", (_req, res) => {
+  const imagepath = `${__dirname}/compressed_images/`;
+  const images_array = fs.readdirSync(imagepath);
+  const images_urls = images_array.map((value) => {
     return `${process.env.URL.slice(-1).endsWith('/') ? process.env.URL : process.env.URL + "/"}compressed_images/${value}`;
   });
   res.status(200).json({ images_urls, images_array });
@@ -132,7 +132,7 @@ router.get("/compressed_images/", (req, res) => {
 
 app.use("/", router);
 
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   if (err.code == "ENOENT") {
     res.status(404).json({ message: "Image Not Found!" });
   } else {
@@ -140,7 +140,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.status(200).json({
     Message: "Congrats the servers up, look at images on the /images endpoint."
   });

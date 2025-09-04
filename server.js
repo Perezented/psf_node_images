@@ -17,8 +17,6 @@ const KnexSessionsStore = require("connect-session-knex")(session);
 // setting up the data base connection
 const dbConnection = require("./data/connection");
 
-// CUSTOM ROUTES ADDDDDDD  HHHHHEEEEEEERRRRRREEEEEEE
-
 //  Session configuration for knex
 const sessionConfig = {
   name: "monster",
@@ -61,22 +59,22 @@ server.get("/", (req, res) => {
     Message: "Welcome to the home slash of this server"
   });
 });
-server.post("/upload", upload.single("image"), (req, res) => {
-  fs.rename(req.file.path, "./images/image.jpg", (err) => {
-    console.log(err);
-  });
+// server.post("/upload", upload.single("image"), (req, res) => {
+//   fs.rename(req.file.path, "./images/image.jpg", (err) => {
+//     console.log(err);
+//   });
 
-  sharp(__dirname + "/images/image.jpg")
-    .resize(200, 200)
-    .jpeg({ quality: 50 })
-    .toFile(__dirname + "/images/image_thumb.jpg");
+//   sharp(__dirname + "/images/image.jpg")
+//     .resize(200, 200)
+//     .jpeg({ quality: 50 })
+//     .toFile(__dirname + "/images/image_thumb.jpg");
 
-  sharp(__dirname + "/images/image.jpg")
-    .resize(640, 480)
-    .jpeg({ quality: 80 })
-    .toFile(__dirname + "/images/image_preview.jpg");
+//   sharp(__dirname + "/images/image.jpg")
+//     .resize(640, 480)
+//     .jpeg({ quality: 80 })
+//     .toFile(__dirname + "/images/image_preview.jpg");
 
-  return res.json("File Uploaded Successfully!");
-});
+//   return res.json("File Uploaded Successfully!");
+// });
 
 module.exports = server;
