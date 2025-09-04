@@ -1,6 +1,7 @@
 "use strict";
 require("dotenv/config");
-
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 // const multer = require("multer");
 const bodyParser = require("body-parser");
@@ -59,6 +60,41 @@ app.use((err, _req, res, _next) => {
   }
 });
 
+// Helper to list images
+function getImagesList(dir, urlPath) {
+  const imagepath = path.join(__dirname, dir);
+  const images_array = fs.readdirSync(imagepath);
+  const baseUrl = process.env.URL.endsWith("/") ? process.env.URL : process.env.URL + "/";
+  const images_urls = images_array.map(value => `${baseUrl}${urlPath}/${value}`);
+  return { images_urls, images_array };
+}
+
+// List images endpoints
+router.get("/images", (_req, res) => {
+  res.status(200).json(getImagesList("images", "images"));
+});
+
+router.get("/compressed_images", (_req, res) => {
+  res.status(200).json(getImagesList("compressed_images", "compressed_images"));
+});
+
+// Serve compressed images
+router.get("/compressed_images/:imagename", (req, res, next) => {
+  const imagepath = path.join(__dirname, "compressed_images", req.params.imagename);
+  fs.readFile(imagepath, (err, image) => {
+    if (err) return next(err);
+    res.end(image, "binary");
+  });
+});
+
+// Serve original images
+router.get("/images/:imagename", (req, res, next) => {
+  const imagepath = path.join(__dirname, "images", req.params.imagename);
+  fs.readFile(imagepath, (err, image) => {
+    if (err) return next(err);
+    res.end(image, "binary");
+  });
+});
 app.use("/", router);
 
 app.listen(port, () => {
