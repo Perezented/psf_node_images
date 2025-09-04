@@ -42,6 +42,14 @@ app.use((_req, res, next) => {
 //   }
 // }).single("image");
 
+// Root endpoint
+router.get("/", (_req, res) => {
+  res.status(200).json({
+    message: "Welcome to the home slash of this server",
+  });
+});
+
+
 // Error handling
 app.use((err, _req, res, _next) => {
   if (err.code === "ENOENT") {
